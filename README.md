@@ -1,11 +1,11 @@
-# PGG
+# com.pgg.PGG
 Public Goods Game Project for Complex Networks course
 
 ***
 
 
 ### Instalation 
-    javac PGG.java
+    javac com.pgg.PGG.java
     
 ### Running 
-    java PGG [arguments]
+    java com.pgg.PGG [arguments]
