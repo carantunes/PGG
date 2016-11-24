@@ -7,20 +7,26 @@ import java.util.Random;
  */
 public class Sample {
 
-    private Double offer;
-    private Double fitness;
+    private double offer;
+    private double fitness;
 
-    protected Sample(Double offer){
+    protected Sample(double offer){
         this.offer = offer;
-
     }
 
-    protected Double getOffer(){
+    protected double getOffer(){
         return this.offer;
     }
+    protected double getFitness(){
+        return this.fitness;
+    }
 
-    protected void setOffer(){
+    protected void setOffer(double offer){
+        this.offer = offer;
+    }
 
+    protected void setFitness(double fitness){
+        this.fitness = fitness;
     }
 
     public void update(){
