@@ -1,14 +1,12 @@
 package com.pgg;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-
 import java.util.*;
 import java.util.stream.DoubleStream;
 import java.lang.Math;
 
 public class PGG {
 
-    private static final double EPS = 0.05;
+    private static final double EPS = 0.00;
 
     private Sample[] population;
     private int population_size;
@@ -57,13 +55,9 @@ public class PGG {
         }
         System.out.println(Arrays.toString(profits));
         player.setFitness(DoubleStream.of(profits).sum() / times);
-        System.out.println(" getFitness ---- " + player.getFitness());
-        System.out.println("playerOffer ---- " + player.getOffer());
-
-
+        System.out.println(" playerFitness ---- " + player.getFitness());
+        System.out.println(" playerOffer ---- " + player.getOffer());
         updateOffer(index);
-
-
     }
 
     private double playGame(int index){
@@ -83,7 +77,6 @@ public class PGG {
             }
         }
         group[group_size-1] = population[player];
-
         return group;
     }
 
@@ -105,17 +98,19 @@ public class PGG {
         double neighbour_fitness = neighbour.getFitness();
         double diff = player_fitness - neighbour_fitness;
         if(diff < 0){
-            if(new Random().nextDouble() <= getProbability(player_fitness, neighbour_fitness))
+            if(new Random().nextDouble() <= getProbability(player_fitness, neighbour_fitness)) {
                 player.setOffer(neighbour.getOffer());
+                System.out.println(" player changed offer");
+            }
         }
-        System.out.println(" neigh Offer ---- " + neighbour.getOffer());
-
-        System.out.println(" neighbour_fitness ---- " + neighbour_fitness);
+        System.out.println(" probability ---- " + getProbability(player_fitness, neighbour_fitness));
+        System.out.println(" neighbourOffer ---- " + neighbour.getOffer());
+        System.out.println(" neighbourFitness ---- " + neighbour_fitness);
         System.out.println(" playerOffer ---- " + player.getOffer());
     }
 
     private double getProbability(double player_fitness, double neighbour_fitness){
-        double diff = player_fitness - neighbour_fitness;
+        double diff = neighbour_fitness - player_fitness;
         return 1 / (1 + Math.exp( - beta * diff)) + EPS;
     }
 }
