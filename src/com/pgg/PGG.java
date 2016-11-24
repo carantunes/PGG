@@ -1,10 +1,11 @@
 package com.pgg;
 
 import java.util.*;
+import com.pgg.Sample;
 
 public class PGG {
 
-    private double[] population;
+    private Sample[] population;
     private Random rnd = new Random();
     private int population_size;
 
@@ -17,15 +18,15 @@ public class PGG {
     }
 
     //constructor
-    public PGG(String arg){
+    private PGG(String arg){
         population_size = Integer.valueOf(arg);
     }
 
     private void createPopulation(){
-        population = new double[population_size];
+        population = new Sample[population_size];
         for (int i = 0; i< population_size; i++) {
-            population[i] = Math.round(rnd.nextDouble() * 10) / 10.0 ;
-            System.out.println(population[i]);
+            population[i] = new Sample(Math.round(rnd.nextDouble() * 10) / 10.0) ;
+            System.out.println(population[i].getOffer());
         }
     }
 }
