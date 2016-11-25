@@ -11,7 +11,9 @@ public class Sample {
     private double fitness;
 
     protected Sample(double offer){
+
         this.offer = offer;
+        this.fitness = 0;
     }
 
     protected double getOffer(){
@@ -27,10 +29,6 @@ public class Sample {
 
     protected void setFitness(double fitness){
         this.fitness = fitness;
-    }
-
-    public void update(){
-
     }
 
 }

@@ -1,9 +1,11 @@
 package com.pgg;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.*;
 import java.util.stream.DoubleStream;
 import java.lang.Math;
-
+import java.io.BufferedWriter;
 public class PGG {
 
     private static final double EPS = 0.00;
@@ -14,6 +16,7 @@ public class PGG {
     private double factor;
     private int times;
     private double beta;
+    private BufferedWriter writer;
 
     /**
      * Main method
@@ -24,9 +27,19 @@ public class PGG {
         double factor = Double.valueOf(args[2]);
         int times = Integer.valueOf(args[3]);
         double beta = Double.valueOf(args[4]);
+        int iterations = Integer.valueOf(args[5]);
         PGG myPGG = new PGG(population_size, group_size, factor, times, beta);
         myPGG.createPopulation();
-        myPGG.iterations();
+
+        for(int i = 0; i < iterations; i++){
+            myPGG.trainFitness();
+            myPGG.writePopulationStatsToFile();
+        }
+        try {
+            myPGG.writer.close();
+        }catch (Exception e){
+            System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
+        }
     }
 
     //constructor
@@ -36,6 +49,11 @@ public class PGG {
         this.factor = factor;
         this.times = times;
         this.beta = beta;
+        try {
+            this.writer = new BufferedWriter(new FileWriter("stats_F-" + factor + "_B-" + beta + ".txt"));
+        }catch (Exception e){
+            System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
+        }
     }
 
     private void createPopulation(){
@@ -43,21 +61,44 @@ public class PGG {
         population = new Sample[population_size];
         for (int i = 0; i< population_size; i++) {
             population[i] = new Sample(Math.round(rnd.nextDouble() * 10) / 10.0) ;
+            // population[i] = new Sample(1);
         }
     }
 
-    private void iterations(){
-        int index = new Random().nextInt(population_size);
-        Sample player = population[index];
+    private void trainFitness(){
+        int playerA = new Random().nextInt(population_size);
+
+        int playerB;
+        while ((playerB = new Random().nextInt(population_size)) == playerA);
+
+        double fitnessA = getFitness(playerA);
+        double fitnessB = getFitness(playerB);
+
+        updateOffer(playerA, playerB, fitnessA, fitnessB);
+    }
+
+    private double getFitness(int index){
         double[] profits = new double[times];
         for(int i= 0; i<times; i++){
             profits[i] = playGame(index);
         }
-        System.out.println(Arrays.toString(profits));
-        player.setFitness(DoubleStream.of(profits).sum() / times);
-        System.out.println(" playerFitness ---- " + player.getFitness());
-        System.out.println(" playerOffer ---- " + player.getOffer());
-        updateOffer(index);
+        return DoubleStream.of(profits).sum() / times;
+
+    }
+
+    private void writePopulationStatsToFile(){
+        try{
+            double offer_sum = 0;
+            for (Sample subject : population) {
+                offer_sum += subject.getOffer();
+            }
+
+            writer.write(Double.toString(offer_sum/population_size));
+            writer.newLine();
+
+        } catch (Exception e) {
+            System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
+        }
     }
 
     private double playGame(int index){
@@ -88,25 +129,14 @@ public class PGG {
         return (offer_sum * factor) / group_size;
     }
 
-    private void updateOffer(int player_index){
-        int neighbour_index;
-        while ((neighbour_index = new Random().nextInt(population_size)) == player_index);
-        Sample player = population[player_index];
-        Sample neighbour = population[neighbour_index];
+    private void updateOffer(int player, int neighbour, double player_fitness, double neighbour_fitness){
 
-        double player_fitness = player.getFitness();
-        double neighbour_fitness = neighbour.getFitness();
         double diff = player_fitness - neighbour_fitness;
         if(diff < 0){
             if(new Random().nextDouble() <= getProbability(player_fitness, neighbour_fitness)) {
-                player.setOffer(neighbour.getOffer());
-                System.out.println(" player changed offer");
+                population[player].setOffer(population[neighbour].getOffer());
             }
         }
-        System.out.println(" probability ---- " + getProbability(player_fitness, neighbour_fitness));
-        System.out.println(" neighbourOffer ---- " + neighbour.getOffer());
-        System.out.println(" neighbourFitness ---- " + neighbour_fitness);
-        System.out.println(" playerOffer ---- " + player.getOffer());
     }
 
     private double getProbability(double player_fitness, double neighbour_fitness){
