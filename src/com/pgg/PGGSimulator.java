@@ -125,7 +125,7 @@ public class PGGSimulator {
 
     protected void openWriter(String filename){
         try {
-            writer = new BufferedWriter(new FileWriter("stats\\" + filename));
+            writer = new BufferedWriter(new FileWriter("stats/" + filename));
         }catch (Exception e){
             System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
         }
