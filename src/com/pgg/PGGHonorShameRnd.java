@@ -1,13 +1,14 @@
 package com.pgg;
 
 import static com.pgg.Utils.findMinMax;
+import static com.pgg.Utils.findMinMaxRnd;
 
-class PGGHonorShame extends PGG {
+class PGGHonorShameRnd extends PGG {
 
     protected double honorFactor;
     protected double shameFactor;
 
-    public PGGHonorShame(int population_size, int group_size, double factor, int n_games, double honorFactor, double shameFactor){
+    public PGGHonorShameRnd(int population_size, int group_size, double factor, int n_games, double honorFactor, double shameFactor){
         super(population_size, group_size, factor, n_games);
         this.honorFactor = honorFactor;
         this.shameFactor = shameFactor;
@@ -21,9 +22,9 @@ class PGGHonorShame extends PGG {
     protected double playGame(int subject_index){
         Subject[] group = pickGroup(subject_index);
         Subject subject = this.population[subject_index];
-        Double profit = getProfit(group);
+        Double profit = getProfit(group) ;
 
-        MinMax minMax = findMinMax(group);
+        MinMax minMax = findMinMaxRnd(group);
 
         //NOTE: subject is always last in group
 

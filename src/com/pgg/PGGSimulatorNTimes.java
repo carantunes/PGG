@@ -2,6 +2,7 @@ package com.pgg;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 public class PGGSimulatorNTimes {
@@ -33,15 +34,57 @@ public class PGGSimulatorNTimes {
         int generations = Integer.valueOf(args[5]);
         String game_name = args[6];
         PGGSimulatorNTimes simulator = new PGGSimulatorNTimes(beta);
+        DecimalFormat df = new DecimalFormat("#.#");
 
 
 
                 switch(game_name){
+                    case "PGG":
+
+                        for(double b = 0; b < 0.1; b += 0.01){
+
+
+                            simulator.beta = b;
+                            simulator.game = new PGG(population_size, group_size, factor, n_games);
+
+                            simulator.openWriter("Beta/" + game_name + "_stats_F-" + factor + "_B-" + df.format(b).replace(',', '.') + ".txt");
+
+                            simulator.game.createPopulation();
+                            for(int i = 0; i < generations; i++){
+                                simulator.trainFitness();
+                                simulator.writePopulationStatsToFile(simulator.game.getOfferAverage() );
+
+                            }
+                            simulator.closeWriter();
+
+                            System.out.println("beta " + b );
+                        }
+
+
+                        simulator.beta = beta;
+                        for(double f = 0; f < group_size + 2; f += 0.5){
+                            simulator.game = new PGG(population_size, group_size, f, n_games);
+                            simulator.openWriter("Factor/" + game_name + "_stats_F-" + df.format(f).replace(',', '.') + "_B-" + beta + ".txt");
+
+                            simulator.game.createPopulation();
+                            for(int i = 0; i < generations; i++){
+                                simulator.trainFitness();
+                                simulator.writePopulationStatsToFile(simulator.game.getOfferAverage() );
+
+                            }
+                            simulator.closeWriter();
+
+                            System.out.println("factor " + f );
+                        }
+
+                        break;
+
+
                     case "PGGHonorShame":
                         for(double honor = 0; honor < 1; honor += 0.1){
                             for(double shame = 0; shame < 1; shame+=0.1 ){
                                 simulator.game = new PGGHonorShame(population_size, group_size, factor, n_games, honor, shame);
-                                simulator.openWriter("HS/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_H-" + honor + "_S-" + shame + ".txt");
+                                simulator.openWriter("HS/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_H-" + df.format(honor).replace(',', '.') + "_S-" + df.format(shame).replace(',', '.') + ".txt");
 
                                 simulator.game.createPopulation();
                                 for(int i = 0; i < generations; i++){
@@ -59,7 +102,7 @@ public class PGGSimulatorNTimes {
                     case "PGGHonor":
                         for(double honor = 0; honor < 1; honor += 0.1){
                             simulator.game = new PGGHonor(population_size, group_size, factor, n_games, honor);
-                            simulator.openWriter("Honor/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_H-" + honor + "_S-" + ".txt");
+                            simulator.openWriter("Honor/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_H-" + df.format(honor).replace(',', '.') + ".txt");
 
                             simulator.game.createPopulation();
                             for(int i = 0; i < generations; i++){
@@ -71,10 +114,27 @@ public class PGGSimulatorNTimes {
 
                             System.out.println("Done " + honor );
                         }
+                        break;
+                    case "PGGHonorThreshold":
+                        for(double honor = 0; honor < 1; honor += 0.1){
+                            simulator.game = new PGGHonorThreshold(population_size, group_size, factor, n_games, 3, honor);
+                            simulator.openWriter("HThresh/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_H-" + df.format(honor).replace(',', '.') + ".txt");
+
+                            simulator.game.createPopulation();
+                            for(int i = 0; i < generations; i++){
+                                simulator.trainFitness();
+                                simulator.writePopulationStatsToFile(simulator.game.getOfferAverage() );
+
+                            }
+                            simulator.closeWriter();
+
+                            System.out.println("Done " + honor );
+                        }
+                        break;
                     case "PGGShame":
                         for(double shame = 0; shame < 1; shame += 0.1){
                             simulator.game = new PGGShame(population_size, group_size, factor, n_games, shame);
-                            simulator.openWriter("Shame/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_H-" + shame + "_S-" + ".txt");
+                            simulator.openWriter("Shame/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_H-" + df.format(shame).replace(',', '.') + "_S-" + ".txt");
 
                             simulator.game.createPopulation();
                             for(int i = 0; i < generations; i++){
@@ -86,6 +146,23 @@ public class PGGSimulatorNTimes {
 
                             System.out.println("Done " + shame );
                         }
+                        break;
+                    case "PGGShameThreshold":
+                        for(double shame = 0; shame < 1; shame += 0.1){
+                            simulator.game = new PGGShameThreshold(population_size, group_size, factor, n_games, 3, shame);
+                            simulator.openWriter("Shame/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_S-" + df.format(shame).replace(',', '.') + "_S-" + ".txt");
+
+                            simulator.game.createPopulation();
+                            for(int i = 0; i < generations; i++){
+                                simulator.trainFitness();
+                                simulator.writePopulationStatsToFile(simulator.game.getOfferAverage() );
+
+                            }
+                            simulator.closeWriter();
+
+                            System.out.println("Done " + shame );
+                        }
+                        break;
                     default:
                         break;
                 }

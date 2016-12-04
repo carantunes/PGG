@@ -34,7 +34,7 @@ class PGG extends Game {
     protected double playGame(int subject_index){
         Subject[] group = pickGroup(subject_index);
         Subject subject = population[subject_index];
-        return getProfit(group) - subject.getOffer() ;
+        return getProfit(group) + 1 - subject.getOffer() ;
     }
 
     protected Subject[] pickGroup(int subject_index){

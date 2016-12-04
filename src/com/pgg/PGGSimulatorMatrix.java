@@ -3,6 +3,7 @@ package com.pgg;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Random;
 
 public class PGGSimulatorMatrix {
@@ -35,13 +36,41 @@ public class PGGSimulatorMatrix {
         String game_name = args[6];
         PGGSimulatorMatrix simulator = new PGGSimulatorMatrix(beta);
 
-        simulator.openWriter(game_name + "_MATRIX_"+ "_stats_F-" + factor + "_B-" + beta + ".txt");
+       simulator.openWriter(game_name + "_MATRIX_"+ "_stats_F-" + factor + "_B-" + beta + ".txt");
 
+        try{
+            simulator.writer.write("  0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1");
+
+        } catch (Exception e) {
+            System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
+        }
         for(double honor = 0; honor < 1; honor += 0.1){
+            try{
+                simulator.writer.newLine();
+                DecimalFormat df = new DecimalFormat("#.#");
+                simulator.writer.write( df.format(honor).replace(',', '.') + " ");
+
+            } catch (Exception e) {
+                System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
+            }
             for(double shame = 0; shame < 1; shame+=0.1 ){
                 switch(game_name){
-                    case "PGGHonorShame":
-                        simulator.game = new PGGHonorShame(population_size, group_size, factor, n_games, honor, shame);
+                    case "PGGHonorShameRnd":
+                        simulator.game = new PGGHonorShameRnd(population_size, group_size, factor, n_games, honor, shame);
+
+                        break;
+                    case "PGGHonorShameAll":
+                        simulator.game = new PGGHonorShameAll(population_size, group_size, factor, n_games, honor, shame);
+
+                        break;
+                    case "PGGHonorShameShare":
+                        simulator.game = new PGGHonorShameShare(population_size, group_size, factor, n_games, honor, shame);
+
+                        break;
+
+                    case "PGGHonorShameThreshold":
+                        int threshold = 3;
+                        simulator.game = new PGGHonorShameThreshold(population_size, group_size, factor, n_games, threshold, honor, shame);
 
                         break;
                     default:
@@ -56,13 +85,6 @@ public class PGGSimulatorMatrix {
                 simulator.writePopulationStatsToFile(simulator.game.getOfferAverage() );
                 System.out.println("Done " + honor + " " + shame);
             }
-            try{
-                simulator.writer.newLine();
-            } catch (Exception e) {
-                System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
-            }
-
-
         }
         simulator.closeWriter();
 
@@ -70,8 +92,10 @@ public class PGGSimulatorMatrix {
 
     private void writePopulationStatsToFile(double stats){
         try{
+
+
             DecimalFormat df = new DecimalFormat("#.###");
-            writer.write(df.format(stats) + " ");
+            writer.write(df.format(stats).replace(',', '.') + " ");
 
 
         } catch (Exception e) {

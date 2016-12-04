@@ -1,10 +1,6 @@
 package com.pgg;
 
-import jdk.internal.util.xml.impl.Pair;
-
-import java.util.Random;
-import java.util.stream.DoubleStream;
-
+import static com.pgg.Utils.findMinMax;
 
 class PGGShame extends PGG {
 
@@ -23,52 +19,17 @@ class PGGShame extends PGG {
     protected double playGame(int subject_index){
         Subject[] group = pickGroup(subject_index);
         Subject subject = this.population[subject_index];
-        Double profit = getProfit(group) - subject.getOffer() ;
+        Double profit = getProfit(group);
 
         MinMax minMax = findMinMax(group);
+
+        //NOTE: subject is always last in group
         //worst player
-        if(subject.equals(minMax.getMin())){
-            profit *= (1 - shameFactor);
-        }
-        return profit;
-
-    }
-
-
-    private MinMax findMinMax(Subject[] population) {
-        if (population == null || population.length < 1)
-            return null;
-        Subject min = population[0];
-        Subject max = population[0];
-
-        for (int i = 1; i < population.length ; i++) {
-            if (max.getOffer() < population[i].getOffer()) {
-                max = population[i];
-            }
-
-            if (min.getOffer() > population[i].getOffer()) {
-                min = population[i];
-            }
+        if(group.length - 1 == minMax.getMin()){
+            profit *= (1 - (shameFactor/ minMax.getTotalMin()));
         }
 
-        return new MinMax(min,max);
-    }
+        return profit + 1 - subject.getOffer() ;
 
-      final class MinMax {
-        private final Subject min;
-        private final Subject max;
-
-        public MinMax(Subject min, Subject max) {
-            this.min = min;
-            this.max = max;
-        }
-
-        public Subject getMin() {
-            return min;
-        }
-
-        public Subject getMax() {
-            return max;
-        }
     }
 }
