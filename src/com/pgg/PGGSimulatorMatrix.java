@@ -116,20 +116,21 @@ public class PGGSimulatorMatrix {
     }
 
     private void updateOffer(int subject, int neighbour, double subject_fitness, double neighbour_fitness){
-        double diff = subject_fitness - neighbour_fitness;
-        if(diff < 0){
-            if(new Random().nextDouble() <= getProbability(subject_fitness, neighbour_fitness)) {
-                game.population[subject].setOffer(game.population[neighbour].getOffer());
-            }
+        double diff =  neighbour_fitness - subject_fitness;
+        if(new Random().nextDouble() <= getProbability(subject_fitness, neighbour_fitness)) {
+            // +EPS, -EPS, 0
+            double error = EPS *  (new Random().nextInt(3) - 1);
+            double new_offer = game.population[neighbour].getOffer() + error;
+
+            new_offer = new_offer > 1 ? 1 : (new_offer < 0 ? 0 : new_offer);
+
+            game.population[subject].setOffer(new_offer);
         }
     }
 
     private double getProbability(double subject_fitness, double neighbour_fitness){
         double diff = neighbour_fitness - subject_fitness;
-
-        // +EPS, -EPS, 0
-        double error = EPS *  (new Random().nextInt(3) - 1);
-        return 1 / (1 + Math.exp( - beta * diff)) + error;
+        return 1 / (1 + Math.exp( - beta * diff)) ;
     }
 
     protected void openWriter(String filename){

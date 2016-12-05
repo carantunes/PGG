@@ -34,16 +34,16 @@ public class PGGSimulatorNTimes {
         int generations = Integer.valueOf(args[5]);
         String game_name = args[6];
         PGGSimulatorNTimes simulator = new PGGSimulatorNTimes(beta);
-        DecimalFormat df = new DecimalFormat("#.#");
+        DecimalFormat df = new DecimalFormat("#.0");
 
 
 
                 switch(game_name){
                     case "PGG":
 
-                        for(double b = 0; b < 0.1; b += 0.01){
+                        for(double b = 0; b <= 5; b += 0.5){
 
-
+                            df = new DecimalFormat("#.00");
                             simulator.beta = b;
                             simulator.game = new PGG(population_size, group_size, factor, n_games);
 
@@ -59,7 +59,6 @@ public class PGGSimulatorNTimes {
 
                             System.out.println("beta " + b );
                         }
-
 
                         simulator.beta = beta;
                         for(double f = 0; f < group_size + 2; f += 0.5){
@@ -83,7 +82,7 @@ public class PGGSimulatorNTimes {
                     case "PGGHonorShame":
                         for(double honor = 0; honor < 1; honor += 0.1){
                             for(double shame = 0; shame < 1; shame+=0.1 ){
-                                simulator.game = new PGGHonorShame(population_size, group_size, factor, n_games, honor, shame);
+                                simulator.game = new PGGHonorShameShare(population_size, group_size, factor, n_games, honor, shame);
                                 simulator.openWriter("HS/" + game_name +  "_stats_F-" + factor + "_B-" + beta + "_H-" + df.format(honor).replace(',', '.') + "_S-" + df.format(shame).replace(',', '.') + ".txt");
 
                                 simulator.game.createPopulation();
@@ -196,20 +195,21 @@ public class PGGSimulatorNTimes {
     }
 
     private void updateOffer(int subject, int neighbour, double subject_fitness, double neighbour_fitness){
-        double diff = subject_fitness - neighbour_fitness;
-        if(diff < 0){
+        double diff =  neighbour_fitness - subject_fitness;
             if(new Random().nextDouble() <= getProbability(subject_fitness, neighbour_fitness)) {
-                game.population[subject].setOffer(game.population[neighbour].getOffer());
+                // +EPS, -EPS, 0
+                double error = EPS *  (new Random().nextInt(3) - 1);
+                double new_offer = game.population[neighbour].getOffer() + error;
+
+                new_offer = new_offer > 1 ? 1 : (new_offer < 0 ? 0 : new_offer);
+
+                game.population[subject].setOffer(new_offer);
             }
-        }
     }
 
     private double getProbability(double subject_fitness, double neighbour_fitness){
         double diff = neighbour_fitness - subject_fitness;
-
-        // +EPS, -EPS, 0
-        double error = EPS *  (new Random().nextInt(3) - 1);
-        return 1 / (1 + Math.exp( - beta * diff)) + error;
+        return 1 / (1 + Math.exp( - beta * diff)) ;
     }
 
     protected void openWriter(String filename){
