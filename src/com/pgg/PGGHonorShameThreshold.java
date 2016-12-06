@@ -1,7 +1,7 @@
 package com.pgg;
 
 
-class PGGHonorShameThreshold extends PGGHonorShame {
+class PGGHonorShameThreshold extends PGGHonorShameShare {
 
     protected int threshold;
 

@@ -195,16 +195,17 @@ public class PGGSimulatorNTimes {
     }
 
     private void updateOffer(int subject, int neighbour, double subject_fitness, double neighbour_fitness){
-        double diff =  neighbour_fitness - subject_fitness;
-            if(new Random().nextDouble() <= getProbability(subject_fitness, neighbour_fitness)) {
-                // +EPS, -EPS, 0
-                double error = EPS *  (new Random().nextInt(3) - 1);
-                double new_offer = game.population[neighbour].getOffer() + error;
 
-                new_offer = new_offer > 1 ? 1 : (new_offer < 0 ? 0 : new_offer);
+        if (new Random().nextDouble() <= getProbability(subject_fitness, neighbour_fitness)) {
+            // +EPS, -EPS, 0
+            double error = EPS * (new Random().nextInt(3) - 1);
+            double new_offer = game.population[neighbour].getOffer() + error;
 
-                game.population[subject].setOffer(new_offer);
-            }
+            new_offer = new_offer > 1 ? 1 : (new_offer < 0 ? 0 : new_offer);
+
+            game.population[subject].setOffer(new_offer);
+        }
+
     }
 
     private double getProbability(double subject_fitness, double neighbour_fitness){

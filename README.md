@@ -8,12 +8,16 @@ Public Goods Game Project for Complex Networks course
     javac com.pgg.PGGSimulator
     
 ### Running 
-    java com.pgg.PGGSimulator [population_size] [group_size] [factor] [times] [beta] [game_name] [optional params]
+    java com.pgg.PGGSimulatorNTimes [population_size] [group_size] [factor] [times] [beta] [game_name] [optional params]
+    java com.pgg.PGGSimulatorMatrix [population_size] [group_size] [factor] [times] [beta] [game_name] [optional params]
 
     Param game_name:
         PGG
-        PGGShame [shameFactor]
-        PGGShame [honorFactor]
-        PGGHonorShame [honorFactor] [shameFactor]
+        PGGShame 
+        PGGHonor 
+        PGGHonorShameShare 
+        PGGHonorShameAll
+        PGGHonorShameRnd
+        PGGHonorShameThreshold
 #### Example:
-    java com.pgg.PGGSimulator 50 5 1.5 10 5 PGGShame 0.2
+    java com.pgg.PGGSimulatorMatrix 500 6 1.5 500 1 10000 PGGHonorShame
