@@ -1,16 +1,16 @@
-package com.pgg;
+package com.pgg.v2.simulator.games.subject;
 
 public class Subject {
     private double offer;
 
-    protected Subject(double offer){
+    public Subject(double offer){
         this.offer = offer;
     }
 
-    protected double getOffer(){
+    public double getOffer(){
         return this.offer;
     }
-    protected void setOffer(double offer){
+    public void setOffer(double offer){
         this.offer = offer;
     }
 

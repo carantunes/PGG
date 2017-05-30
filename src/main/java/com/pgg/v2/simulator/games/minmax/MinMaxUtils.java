@@ -1,12 +1,17 @@
-package com.pgg;
+package com.pgg.v2.simulator.games.minmax;
+
+import com.pgg.v2.simulator.games.subject.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Created by Carina on 30/05/2017.
+ */
 
-public class Utils {
 
+public class MinMaxUtils {
     public static MinMax findMinMax(Subject[] population) {
         if (population == null || population.length < 1)
             return null;
@@ -37,11 +42,11 @@ public class Utils {
 
         }
 
-        int iMin = indexMin.contains(new Integer(5)) ? 5 : getRandom(indexMin);
+        //NOTE: subject is always last in group
+        boolean isMin = indexMin.contains(population.length - 1);
+        boolean isMax = indexMax.contains(population.length - 1);
 
-        int iMax = indexMax.contains(new Integer(5)) ? 5 : getRandom(indexMax);
-        return new MinMax(iMin,iMax, indexMin.size(), indexMin.size());
-        //return new MinMax(getRandom(indexMin),getRandom(indexMax), indexMin.size(), indexMin.size());
+        return new MinMax(isMin,isMax, indexMin.size(), indexMax.size());
     }
 
     public static MinMax findMinMaxRnd(Subject[] population) {
@@ -73,12 +78,12 @@ public class Utils {
             }
 
         }
+        //NOTE: subject is always last in group
 
-        int iMin = indexMin.contains(new Integer(5)) ? 5 : getRandom(indexMin);
+        boolean isMin = getRandom(indexMin) == population.length - 1;
+        boolean isMax = getRandom(indexMax) == population.length - 1;
 
-        int iMax = indexMax.contains(new Integer(5)) ? 5 : getRandom(indexMax);
-        //return new MinMax(iMin,iMax, indexMin.size(), indexMin.size());
-        return new MinMax(getRandom(indexMin),getRandom(indexMax), indexMin.size(), indexMin.size());
+        return new MinMax(isMin,isMax, indexMin.size(), indexMax.size());
     }
 
 
