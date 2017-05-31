@@ -1,5 +1,5 @@
 # com.pgg.PGGSimulator
-Public Goods Game Project for Complex Networks course
+Public Goods Game Project for Masters Thesis
 
 ***
 
