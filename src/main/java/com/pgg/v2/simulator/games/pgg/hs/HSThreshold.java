@@ -11,11 +11,11 @@ public class HSThreshold extends HonorShame{
     private boolean hit_threshold;
 
     public HSThreshold(double avg,
-                      double std_variance,
-                      double honorFactor,
-                      double shameFactor,
-                       Mode mode){
-        super(avg, std_variance, honorFactor, shameFactor, mode);
+                       double std_variance,
+                       double honorFactor,
+                       double shameFactor,
+                       Mode calculator){
+        super(avg, std_variance, honorFactor, shameFactor, calculator);
         this.hit_threshold = false;
     }
 
@@ -38,25 +38,6 @@ public class HSThreshold extends HonorShame{
 
         hit_threshold = true;
         return (offer_sum * Parameters.FACTOR) / Parameters.GROUP_SIZE;
-
-    }
-
-    @Override
-    public double playGame(int subject_index){
-        Subject[] group = pickGroup(subject_index);
-        Subject subject = this.population[subject_index];
-        Double profit = getProfit(group) ;
-
-        Double remaining_offer = 1 - subject.getOffer();
-        profit = mode.calcHonor(group, profit, honorFactor);
-        profit = mode.calcShame(group, profit, shameFactor);
-        if(hit_threshold){
-            remaining_offer = mode.calcHonor(group, remaining_offer, honorFactor);
-        } else{
-            remaining_offer = mode.calcShame(group, remaining_offer, shameFactor);
-        }
-
-        return profit + remaining_offer ;
 
     }
 }

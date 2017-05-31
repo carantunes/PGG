@@ -2,7 +2,7 @@ package com.pgg.v2.simulator.games;
 
 import com.pgg.v2.simulator.games.pgg.PGG;
 import com.pgg.v2.simulator.games.pgg.hs.HSThreshold;
-import com.pgg.v2.simulator.games.pgg.hs.HSThreshold2;
+import com.pgg.v2.simulator.games.pgg.hs.HSThresholdDependent;
 import com.pgg.v2.simulator.games.pgg.hs.HonorShame;
 import com.pgg.v2.simulator.games.pgg.hs.modes.ModeFactory;
 
@@ -43,10 +43,10 @@ public class GameFactory {
     }
 
     private static PGG createHSThreshold(Double avg, Double std_variance, Double honorFactor, Double shameFactor, int modeOption){
-        return new HSThreshold(avg,std_variance, honorFactor,shameFactor, ModeFactory.createMode(modeOption));
+        return new HSThresholdDependent(avg,std_variance, honorFactor,shameFactor, ModeFactory.createMode(modeOption));
     }
 
     private static PGG createHSThreshold2(Double avg, Double std_variance, Double honorFactor, Double shameFactor, int modeOption){
-        return new HSThreshold2(avg,std_variance, honorFactor,shameFactor, ModeFactory.createMode(modeOption));
+        return new HSThreshold(avg,std_variance, honorFactor,shameFactor, ModeFactory.createMode(modeOption));
     }
 }

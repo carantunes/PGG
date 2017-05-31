@@ -6,6 +6,6 @@ package com.pgg.v2.simulator.games;
 public class GameConstants {
     public static final String PGG = "PGG"; // cannot be run by HSSimulator
     public static final String HS = "HonorShame";
-    public static final String HS_T= "HSThreshold";
-    public static final String HS_T2= "HSThreshold2";
+    public static final String HS_T= "HSThresholdDependent";
+    public static final String HS_T2= "HSThreshold";
 }

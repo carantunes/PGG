@@ -15,7 +15,7 @@ public class Parameters {
     public static final int THRESHOLD = 3;
 
     /**
-     * @see : com.pgg.v2.HSSimulator.games.HonorShame.modes.Mode;
+     * @see : com.pgg.v2.HSSimulator.games.HonorShame.modes.Constants;
      */
     public static final int MODE = 2;
 
