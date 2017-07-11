@@ -19,4 +19,9 @@ public class Parameters {
      */
     public static final int MODE = 2;
 
+    /**
+     * @see : com.pgg.v2.simulator.games.population.Constants;
+     */
+    public static final int NET = 1;
+
 }

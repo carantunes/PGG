@@ -1,6 +1,7 @@
 package com.pgg.v2.simulator.games.pgg.hs;
 
 import com.pgg.v2.simulator.games.pgg.hs.modes.Mode;
+import com.pgg.v2.simulator.games.population.Population;
 import com.pgg.v2.simulator.games.subject.Subject;
 import com.pgg.v2.simulator.Parameters;
 
@@ -10,12 +11,11 @@ import com.pgg.v2.simulator.Parameters;
 public class HSThreshold extends HonorShame{
     private boolean hit_threshold;
 
-    public HSThreshold(double avg,
-                       double std_variance,
+    public HSThreshold(Population population,
                        double honorFactor,
                        double shameFactor,
                        Mode calculator){
-        super(avg, std_variance, honorFactor, shameFactor, calculator);
+        super(population, honorFactor, shameFactor, calculator);
         this.hit_threshold = false;
     }
 

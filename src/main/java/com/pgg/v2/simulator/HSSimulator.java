@@ -4,6 +4,7 @@ import com.pgg.v2.simulator.exceptions.InvalidGameException;
 import com.pgg.v2.simulator.games.GameFactory;
 import com.pgg.v2.simulator.games.pgg.hs.HonorShame;
 import com.pgg.v2.simulator.games.pgg.PGG;
+import com.pgg.v2.simulator.games.population.Population;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -19,12 +20,8 @@ public class HSSimulator {
 
     private void writePopulationStatsToFile(double stats){
         try{
-
-
             DecimalFormat df = new DecimalFormat("#.###");
             writer.write(df.format(stats).replace(',', '.') + " ");
-
-
         } catch (Exception e) {
             System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
         }
@@ -46,11 +43,11 @@ public class HSSimulator {
         if(new Random().nextDouble() <= getProbability(subject_fitness, neighbour_fitness)) {
             // +EPS, -EPS, 0
             double error = Parameters.EPS *  (new Random().nextInt(3) - 1);
-            double new_offer = game.population[neighbour].getOffer() + error;
+            double new_offer = game.population.getSubject(neighbour).getOffer() + error;
 
             new_offer = new_offer > 1 ? 1 : (new_offer < 0 ? 0 : new_offer);
 
-            game.population[subject].setOffer(new_offer);
+            game.population.getSubject(subject).setOffer(new_offer);
         }
     }
 
@@ -124,9 +121,9 @@ public class HSSimulator {
                     System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
                 }
                 for(double shame = 0; shame < 1; shame+=0.1 ){
-                    simulator.game = GameFactory.createPGG(game_name, avg,std_variance,honor, shame, Parameters.MODE);
 
-                    simulator.game.createPopulation();
+                    simulator.game = GameFactory.createPGG(game_name, avg,std_variance,honor, shame, Parameters.MODE, Parameters.NET);
+
                     for(int i = 0; i < Parameters.GENERATIONS; i++){
                         simulator.trainFitness();
                     }

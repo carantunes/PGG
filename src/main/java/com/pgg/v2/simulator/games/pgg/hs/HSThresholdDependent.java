@@ -1,6 +1,7 @@
 package com.pgg.v2.simulator.games.pgg.hs;
 
 import com.pgg.v2.simulator.games.pgg.hs.modes.Mode;
+import com.pgg.v2.simulator.games.population.Population;
 import com.pgg.v2.simulator.games.subject.Subject;
 import com.pgg.v2.simulator.Parameters;
 
@@ -10,12 +11,11 @@ import com.pgg.v2.simulator.Parameters;
 public class HSThresholdDependent extends HonorShame{
     private boolean hit_threshold;
 
-    public HSThresholdDependent(double avg,
-                                double std_variance,
+    public HSThresholdDependent(Population population,
                                 double honorFactor,
                                 double shameFactor,
                                 Mode mode){
-        super(avg, std_variance, honorFactor, shameFactor, mode);
+        super(population, honorFactor, shameFactor, mode);
         this.hit_threshold = false;
     }
 
@@ -44,7 +44,7 @@ public class HSThresholdDependent extends HonorShame{
     @Override
     public double playGame(int subject_index){
         Subject[] group = pickGroup(subject_index);
-        Subject subject = this.population[subject_index];
+        Subject subject = this.population.getSubject(subject_index);
         Double profit = getProfit(group) ;
 
         Double remaining_offer = 1 - subject.getOffer();
