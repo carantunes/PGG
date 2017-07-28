@@ -94,11 +94,11 @@ public class HSSimulator {
         String game_name = args[0];
         DecimalFormat df = new DecimalFormat("#.##");
 
-        if (!isClass(HonorShame.class.getPackage().getName() + "." + game_name)) {
+        if (!isClass(HonorShame.class.getPackage().getName() + "." + game_name) && !game_name.equals("PGG")) {
             throw new InvalidGameException(game_name);
         }
 
-        for(Double avg = 0.0; avg <= 1.0; avg += 0.1){
+        for(Double avg = 0.5; avg <= 1.0; avg += 0.1){
             double std_variance = (1 - avg) <= avg? (1-avg) : avg;
             simulator.openWriter( game_name
                     + "_MATRIX_"

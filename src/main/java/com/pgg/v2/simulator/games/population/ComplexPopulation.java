@@ -46,19 +46,21 @@ public class ComplexPopulation implements Population {
         population = new Subject[Parameters.POPULATION_SIZE];
         network =  new ArrayList[Parameters.POPULATION_SIZE];
 
+        //initial net size
+        int m = 5;
+        int edgesToAdd = m - 1;
         // start with 10 nodes
         int nodeIndex = 0;
-        for (; nodeIndex < 10; nodeIndex++){
-            //double offer = (rnd.nextGaussian() / 6) + 0.25;
+        for (; nodeIndex < m; nodeIndex++){
             double offer = (rnd.nextGaussian() * (std_variance / 3)) + avg;
             if (offer < 0) offer = 0;
             if (offer > 1) offer = 1;
 
-            // double offer = rnd.nextDouble();
             population[nodeIndex] = new Subject(offer);
             network[nodeIndex] = new ArrayList<Integer>();
 
-            for (int edgeIndex = 0; edgeIndex < 10; edgeIndex++){
+            //add edges to all 10 nodes
+            for (int edgeIndex = 0; edgeIndex < m; edgeIndex++){
                 if(edgeIndex != nodeIndex)
                     network[nodeIndex].add(edgeIndex);
             }
@@ -66,40 +68,66 @@ public class ComplexPopulation implements Population {
 
         //add node
         for (; nodeIndex < Parameters.POPULATION_SIZE; nodeIndex++) {
-            //double offer = (rnd.nextGaussian() / 6) + 0.25;
             double offer = (rnd.nextGaussian() * (std_variance / 3)) + avg;
             if (offer < 0) offer = 0;
             if (offer > 1) offer = 1;
 
-            // double offer = rnd.nextDouble();
             population[nodeIndex] = new Subject(offer);
-
-
             network[nodeIndex] = new ArrayList<Integer>();
+
             int totalLinks = countTotalLinks();
             ArrayList<Integer> nodeLinks = network[nodeIndex];
 
-            //add edges
-            for (int edgeIndex = 0; edgeIndex < nodeIndex ; edgeIndex++) {
-                if(edgeIndex == nodeIndex) continue;
+            double attachmentProbability = 0;
+            //Add the appropriate number of edges
+            for (int m_counter = 0; m_counter < edgesToAdd; m_counter++)
+            {
+                double randomNumber = rnd.nextDouble();
 
-                double attachmentProbability = (totalLinks == 0) ? 0 : countSubjectLinks(edgeIndex) / (double) totalLinks ;
-                if(rnd.nextDouble() <= attachmentProbability){
-                    nodeLinks.add(edgeIndex);
-                    network[edgeIndex].add(nodeIndex);
+                //add edges
+                for (int edgeIndex = 0; edgeIndex < nodeIndex ; edgeIndex++) {
+
+                    attachmentProbability += countSubjectLinks(edgeIndex) / (double) totalLinks ;
+                    if(randomNumber <= attachmentProbability){
+                        nodeLinks.add(edgeIndex);
+                        network[edgeIndex].add(nodeIndex);
+
+                        //Stop iterating for this probability, once we have found a single edge
+                        break;
+                    }
                 }
             }
 
-           // min degree = 1
-            if(nodeLinks.size() == 0){
-                int linkIndex;
-                while ((linkIndex = new Random().nextInt(nodeIndex)) == nodeIndex);
-
-                nodeLinks.add(linkIndex);
-                network[linkIndex].add(nodeIndex);
-            }
+            System.out.println(network[nodeIndex].size());
 
         }
+
+        double off = getOfferAverage();
+        System.out.println(off);
+
+        double degreeAverage = getDegreeAverage();
+        double minimumDegree = getMinimumDegree();
+
+    }
+
+    public double getMinimumDegree(){
+        double max_degree =  Parameters.POPULATION_SIZE * Parameters.POPULATION_SIZE;
+        double min_degree = max_degree;
+        for (ArrayList links : network) {
+            if(links.size() < min_degree)
+                min_degree =  links.size();
+        }
+
+        return min_degree;
+    }
+
+    public double getDegreeAverage(){
+        double degree_sum = 0;
+        for (ArrayList links : network) {
+            degree_sum += links.size() ;
+        }
+
+        return degree_sum/ Parameters.POPULATION_SIZE;
     }
 
     @Override
