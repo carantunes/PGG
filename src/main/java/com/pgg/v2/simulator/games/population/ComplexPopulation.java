@@ -3,8 +3,12 @@ package com.pgg.v2.simulator.games.population;
 import com.pgg.v2.simulator.Parameters;
 import com.pgg.v2.simulator.games.subject.Subject;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.FileWriter;
 
 /**
  * Created by Carina on 25/06/2017.
@@ -36,6 +40,55 @@ public class ComplexPopulation implements Population {
         }
         return total;
     }
+
+    public void dumpNetworkCSV(){
+        BufferedWriter writer;
+        double offerAverage = getOfferAverage();
+        String filename = "net_" + offerAverage +".csv";
+
+        try {
+            writer = new BufferedWriter(new FileWriter("stats/" + filename));
+
+            for (int node = 0; node < network.length ; node++) {
+
+                ArrayList<Integer> edges = network[node];
+                String edges_string = Integer.toString(node);
+
+                for(int edge = 0; edge < edges.size(); edge++ ){
+                    edges_string += "," + Integer.toString(edges.get(edge));
+                }
+
+                writer.write(edges_string);
+                writer.newLine();
+
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        filename = "net_stats" + offerAverage +".txt";
+        try {
+            writer = new BufferedWriter(new FileWriter("stats/" + filename));
+
+            double degreeAverage = getDegreeAverage();
+            double minimumDegree = getMinimumDegree();
+
+            writer.write("Offer Average: " + offerAverage);
+            writer.newLine();
+            writer.write("Degree Average: " + degreeAverage);
+            writer.newLine();
+            writer.write("Min degree: " + minimumDegree);
+            writer.newLine();
+            writer.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public ComplexPopulation(double avg, double std_variance) {
         this.avg = avg;
@@ -78,19 +131,28 @@ public class ComplexPopulation implements Population {
             int totalLinks = countTotalLinks();
             ArrayList<Integer> nodeLinks = network[nodeIndex];
 
-            double attachmentProbability = 0;
+            double degreeIgnore = 0;
             //Add the appropriate number of edges
             for (int m_counter = 0; m_counter < edgesToAdd; m_counter++)
             {
                 double randomNumber = rnd.nextDouble();
+                double attachmentProbability = 0;
 
                 //add edges
                 for (int edgeIndex = 0; edgeIndex < nodeIndex ; edgeIndex++) {
 
-                    attachmentProbability += countSubjectLinks(edgeIndex) / (double) totalLinks ;
+
+                    //Check for an existing connection between these two nodes
+                    if (!(network[nodeIndex].contains(edgeIndex))) {
+                        attachmentProbability += countSubjectLinks(edgeIndex) / ((double) totalLinks - degreeIgnore) ;
+                    }
+
                     if(randomNumber <= attachmentProbability){
+                        degreeIgnore += countSubjectLinks(edgeIndex);
+
                         nodeLinks.add(edgeIndex);
                         network[edgeIndex].add(nodeIndex);
+
 
                         //Stop iterating for this probability, once we have found a single edge
                         break;
@@ -102,12 +164,9 @@ public class ComplexPopulation implements Population {
 
         }
 
-        double off = getOfferAverage();
-        System.out.println(off);
 
-        double degreeAverage = getDegreeAverage();
-        double minimumDegree = getMinimumDegree();
 
+        dumpNetworkCSV();
     }
 
     public double getMinimumDegree(){
