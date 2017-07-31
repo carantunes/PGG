@@ -9,27 +9,25 @@ import static com.pgg.v2.simulator.games.minmax.MinMaxUtils.findMinMax;
  * Created by Carina on 30/05/2017.
  */
 public class Share implements Mode {
-
-
     @Override
-    public Double calcHonor(Subject[] group, Double profit, Double honorFactor) {
-        MinMax minMax = findMinMax(group);
-
+    public Double calcHonor(MinMax minMax, Subject player, Double profit, Double honorFactor)
+    {
         //best player
-        if( minMax.isMax()){
+        if( minMax.isInMaxPlayers(player)){
             profit += honorFactor/minMax.getTotalMax();
         }
+
         return profit;
     }
 
     @Override
-    public Double calcShame(Subject[] group, Double profit, Double shameFactor) {
-        MinMax minMax = findMinMax(group);
-
+    public Double calcShame(MinMax minMax, Subject player, Double profit, Double shameFactor)
+    {
         //worst player
-        if(minMax.isMin()){
+        if(minMax.isInMinPlayers(player)){
             profit -= shameFactor/minMax.getTotalMin();
         }
+
         return profit;
     }
 }

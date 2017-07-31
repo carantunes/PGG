@@ -4,9 +4,6 @@ import com.pgg.v2.simulator.games.Game;
 import com.pgg.v2.simulator.games.population.Population;
 import com.pgg.v2.simulator.games.subject.Subject;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.stream.DoubleStream;
 import com.pgg.v2.simulator.Parameters;
 
 /**
@@ -25,25 +22,15 @@ public class PGG implements Game {
     }
 
 
-    public double getFitness(int index){
-        double[] profits = new double[Parameters.N_GAMES];
-        for(int i = 0; i< Parameters.N_GAMES; i++){
-            profits[i] = playGame(index);
-        }
-        return DoubleStream.of(profits).sum() / Parameters.N_GAMES;
-
+    public double getFitness(int index)
+    {
+        return population.getFitness(index, this);
     }
 
 
     //private methods
-    public double playGame(int subject_index){
-        Subject[] group = pickGroup(subject_index);
-        Subject subject = population.getSubject(subject_index);
-        return getProfit(group) + 1 - subject.getOffer() ;
-    }
-
-    protected Subject[] pickGroup(int subject_index){
-        return  population.getSubjectNeighborsIndex(subject_index);
+    public double playGame(Subject subject, Subject[] neighbours_group){
+        return getProfit(neighbours_group) + 1 - subject.getOffer() ;
     }
 
     protected double getProfit(Subject[] group){
@@ -54,4 +41,7 @@ public class PGG implements Game {
         return (offer_sum * Parameters.FACTOR) / Parameters.GROUP_SIZE;
     }
 
+    public void setPopulation(Population population) {
+        this.population = population;
+    }
 }

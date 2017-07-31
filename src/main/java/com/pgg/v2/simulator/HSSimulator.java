@@ -5,6 +5,7 @@ import com.pgg.v2.simulator.games.GameFactory;
 import com.pgg.v2.simulator.games.pgg.hs.HonorShame;
 import com.pgg.v2.simulator.games.pgg.PGG;
 import com.pgg.v2.simulator.games.population.Population;
+import com.pgg.v2.simulator.games.population.PopulationFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -98,8 +99,11 @@ public class HSSimulator {
             throw new InvalidGameException(game_name);
         }
 
+        Population population = PopulationFactory.createPopulation(Parameters.NET);
         for(Double avg = 0.5; avg <= 1.0; avg += 0.1){
             double std_variance = (1 - avg) <= avg? (1-avg) : avg;
+            population.resetOffers(avg,std_variance);
+
             simulator.openWriter( game_name
                     + "_MATRIX_"
                     + "_stats_F-"
@@ -122,7 +126,7 @@ public class HSSimulator {
                 }
                 for(double shame = 0; shame < 1; shame+=0.1 ){
 
-                    simulator.game = GameFactory.createPGG(game_name, avg,std_variance,honor, shame, Parameters.MODE, Parameters.NET);
+                    simulator.game = GameFactory.createPGG(game_name, honor, shame, Parameters.MODE, population);
 
                     for(int i = 0; i < Parameters.GENERATIONS; i++){
                         simulator.trainFitness();

@@ -5,18 +5,19 @@ package com.pgg.v2.simulator.games.population;
  */
 public class PopulationFactory {
 
-    public static Population createPopulation(int networkOption,
-                                              Double avg,
-                                              Double std_variance
+    public static Population createPopulation(int networkOption
     ){
         Population population;
         switch (networkOption) {
             case Constants.MODE_COMPLEX:
-                population = new ComplexPopulation(avg,std_variance);
+                population = new ComplexPopulation();
                 break;
             case Constants.MODE_RANDOM:
+                population = new RandomPopulation();
+                break;
+            case Constants.MODE_UNIFORM:
             default:
-                population = new RandomPopulation(avg,std_variance);
+                population = new UniformPopulation();
                 break;
         }
         return population;

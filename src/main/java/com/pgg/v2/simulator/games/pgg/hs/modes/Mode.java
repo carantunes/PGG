@@ -1,5 +1,6 @@
 package com.pgg.v2.simulator.games.pgg.hs.modes;
 
+import com.pgg.v2.simulator.games.minmax.MinMax;
 import com.pgg.v2.simulator.games.subject.Subject;
 
 /**
@@ -7,6 +8,6 @@ import com.pgg.v2.simulator.games.subject.Subject;
  */
 public interface Mode {
 
-    Double calcHonor(Subject[] group, Double profit, Double honorFactor);
-    Double calcShame(Subject[] group, Double profit, Double shameFactor);
+    Double calcHonor(MinMax minMax, Subject player, Double profit, Double honorFactor);
+    Double calcShame(MinMax minMax, Subject player, Double profit, Double shameFactor);
 }

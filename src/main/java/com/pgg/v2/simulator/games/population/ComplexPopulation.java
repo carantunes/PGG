@@ -1,6 +1,7 @@
 package com.pgg.v2.simulator.games.population;
 
 import com.pgg.v2.simulator.Parameters;
+import com.pgg.v2.simulator.games.Game;
 import com.pgg.v2.simulator.games.subject.Subject;
 
 import java.io.BufferedWriter;
@@ -8,22 +9,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.io.FileWriter;
+import java.util.stream.DoubleStream;
 
 /**
  * Created by Carina on 25/06/2017.
  */
-public class ComplexPopulation implements Population {
-
-    public Subject[] population;
-    public double avg;
-    public double std_variance;
+public class ComplexPopulation extends Population {
 
     /** @var network index array
      * int -> int[] */
     public ArrayList<Integer>[] network;
 
+    @Override
+    public double getFitness(int index, Game game) {
+        double[] profits = new double[Parameters.N_GAMES];
+        //get subject neighbours
+        ArrayList<Integer> neighbours = network[index];
 
+        //for all neighb play with their neigh
+        for(int i = 0; i < neighbours.size(); i++){
+            Subject[] group = getSubjectNeighbors(neighbours.get(i));
+            profits[i] = game.playGame(getSubject(index), group);
+        }
+
+        return DoubleStream.of(profits).sum() / neighbours.size();
+    }
 
     public int countSubjectLinks(int index){
 
@@ -90,10 +100,7 @@ public class ComplexPopulation implements Population {
     }
 
 
-    public ComplexPopulation(double avg, double std_variance) {
-        this.avg = avg;
-        this.std_variance = std_variance;
-
+    public ComplexPopulation() {
         //create population
         Random rnd = new Random();
         population = new Subject[Parameters.POPULATION_SIZE];
@@ -105,11 +112,7 @@ public class ComplexPopulation implements Population {
         // start with 10 nodes
         int nodeIndex = 0;
         for (; nodeIndex < m; nodeIndex++){
-            double offer = (rnd.nextGaussian() * (std_variance / 3)) + avg;
-            if (offer < 0) offer = 0;
-            if (offer > 1) offer = 1;
-
-            population[nodeIndex] = new Subject(offer);
+            population[nodeIndex] = new Subject(nodeIndex);
             network[nodeIndex] = new ArrayList<Integer>();
 
             //add edges to all 10 nodes
@@ -121,11 +124,8 @@ public class ComplexPopulation implements Population {
 
         //add node
         for (; nodeIndex < Parameters.POPULATION_SIZE; nodeIndex++) {
-            double offer = (rnd.nextGaussian() * (std_variance / 3)) + avg;
-            if (offer < 0) offer = 0;
-            if (offer > 1) offer = 1;
 
-            population[nodeIndex] = new Subject(offer);
+            population[nodeIndex] = new Subject(nodeIndex);
             network[nodeIndex] = new ArrayList<Integer>();
 
             int totalLinks = countTotalLinks();
@@ -159,15 +159,14 @@ public class ComplexPopulation implements Population {
                     }
                 }
             }
-
-            System.out.println(network[nodeIndex].size());
-
         }
 
 
 
         dumpNetworkCSV();
     }
+
+
 
     public double getMinimumDegree(){
         double max_degree =  Parameters.POPULATION_SIZE * Parameters.POPULATION_SIZE;
@@ -204,8 +203,9 @@ public class ComplexPopulation implements Population {
         return population[index];
     }
 
+
     @Override
-    public Subject[] getSubjectNeighborsIndex(int index) {
+    public Subject[] getSubjectNeighbors(int index) {
         ArrayList<Integer> neighbours =network[index];
         Subject[] neighboursArray = new Subject[neighbours.size()];
         for (int i = 0; i < neighbours.size(); i++) {

@@ -1,9 +1,12 @@
 package com.pgg.v2.simulator.games.pgg.hs;
 
+import com.pgg.v2.simulator.games.minmax.MinMax;
 import com.pgg.v2.simulator.games.pgg.hs.modes.Mode;
 import com.pgg.v2.simulator.games.population.Population;
 import com.pgg.v2.simulator.games.subject.Subject;
 import com.pgg.v2.simulator.Parameters;
+
+import static com.pgg.v2.simulator.games.minmax.MinMaxUtils.findMinMax;
 
 /**
  * Created by Carina on 30/05/2017.
@@ -19,6 +22,11 @@ public class HSThresholdDependent extends HonorShame{
         this.hit_threshold = false;
     }
 
+    public HSThresholdDependent(Population population,
+                                Mode mode){
+        super(population, mode);
+        this.hit_threshold = false;
+    }
     /**
      * Sums the total of offers and returns a player's cut of the pot
      * after the factor is applied.
@@ -42,21 +50,19 @@ public class HSThresholdDependent extends HonorShame{
     }
 
     @Override
-    public double playGame(int subject_index){
-        Subject[] group = pickGroup(subject_index);
-        Subject subject = this.population.getSubject(subject_index);
-        Double profit = getProfit(group) ;
+    public double playGame(Subject subject, Subject[] neighbours_group)
+    {
+        Double profit = getProfit(neighbours_group) ;
+        MinMax minMax = findMinMax(subject, neighbours_group);
 
         Double remaining_offer = 1 - subject.getOffer();
-        profit = mode.calcHonor(group, profit, honorFactor);
-        profit = mode.calcShame(group, profit, shameFactor);
+
         if(hit_threshold){
-            remaining_offer = mode.calcHonor(group, remaining_offer, honorFactor);
+            remaining_offer = mode.calcHonor(minMax, subject, remaining_offer, honorFactor);
         } else{
-            remaining_offer = mode.calcShame(group, remaining_offer, shameFactor);
+            remaining_offer = mode.calcShame(minMax, subject, remaining_offer, shameFactor);
         }
 
         return profit + remaining_offer ;
-
     }
 }

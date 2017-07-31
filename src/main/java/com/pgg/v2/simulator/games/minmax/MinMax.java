@@ -1,19 +1,21 @@
 package com.pgg.v2.simulator.games.minmax;
 
+import com.pgg.v2.simulator.games.subject.Subject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 /**
  * Created by Carina on 04/12/2016.
  */
 public class MinMax {
-    private final boolean isMin;
-    private final boolean isMax;
-    private final int totalMin;
-    private final int totalMax;
+    List<Subject> minSubjects = new ArrayList<>();
+    List<Subject> maxSubjects = new ArrayList<>();
 
-    public MinMax(boolean isMin, boolean isMax, int totalMin, int totalMax) {
-        this.isMin = isMin;
-        this.isMax = isMax;
-        this.totalMax = totalMax;
-        this.totalMin = totalMin;
+    public MinMax(List<Subject> minSubjects,List<Subject>  maxSubjects) {
+        this.maxSubjects = maxSubjects;
+        this.minSubjects = minSubjects;
     }
 
     /**
@@ -21,8 +23,8 @@ public class MinMax {
      * smaller value
      *
      * */
-    public boolean isMin() {
-        return isMin;
+    public boolean isInMinPlayers(Subject player) {
+        return minSubjects.contains(player);
     }
 
     /**
@@ -30,8 +32,28 @@ public class MinMax {
      * higher value
      *
      * */
-    public boolean isMax() {
-        return isMax;
+    public boolean isInMaxPlayers(Subject player) {
+        return maxSubjects.contains(player);
+    }
+
+    /**
+     * Returns true if the subject is the random player who offered the
+     * smaller value
+     *
+     * */
+    public Subject getRandomMin() {
+        int rnd = new Random().nextInt(minSubjects.size());
+        return minSubjects.get(rnd);
+    }
+
+    /**
+     * Returns true if the subject is the random player who offered the
+     * smaller value
+     *
+     * */
+    public Subject getRandomMax() {
+        int rnd = new Random().nextInt(maxSubjects.size());
+        return maxSubjects.get(rnd);
     }
 
     /**
@@ -39,13 +61,19 @@ public class MinMax {
      * the smaller value
      *
      * */
-    public int getTotalMin(){   return totalMin;}
+    public int getTotalMin(){
+        return minSubjects.size();
+    }
 
     /**
      * Returns total numbers of simultaneous players who offered
      * the higher value
      *
      * */
-    public int getTotalMax(){ return totalMax;}
+    public int getTotalMax(){
+        return maxSubjects.size();
+    }
+
+
 
 }

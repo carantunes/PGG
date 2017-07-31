@@ -15,15 +15,12 @@ import com.pgg.v2.simulator.games.population.PopulationFactory;
 public class GameFactory {
 
     public static PGG createPGG(String game,
-                                Double avg,
-                                Double std_variance,
                                 Double honorFactor,
                                 Double shameFactor,
                                 int modeOption,
-                                int networkOption){
+                                Population population){
        PGG pgg;
 
-       Population population = PopulationFactory.createPopulation(networkOption, avg, std_variance);
        Mode mode = ModeFactory.createMode(modeOption);
 
        switch (game){

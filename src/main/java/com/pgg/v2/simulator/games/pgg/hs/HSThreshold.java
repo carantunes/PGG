@@ -19,6 +19,12 @@ public class HSThreshold extends HonorShame{
         this.hit_threshold = false;
     }
 
+    public HSThreshold(Population population,
+                       Mode calculator){
+        super(population, calculator);
+        this.hit_threshold = false;
+    }
+
     /**
      * Sums the total of offers and returns a player's cut of the pot
      * after the factor is applied.
