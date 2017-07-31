@@ -100,9 +100,9 @@ public class HSSimulator {
         }
 
         Population population = PopulationFactory.createPopulation(Parameters.NET);
+        population.dumpNetworkCSV();
+
         for(Double avg = 0.5; avg <= 1.0; avg += 0.1){
-            double std_variance = (1 - avg) <= avg? (1-avg) : avg;
-            population.resetOffers(avg,std_variance);
 
             simulator.openWriter( game_name
                     + "_MATRIX_"
@@ -125,7 +125,7 @@ public class HSSimulator {
                     System.out.println("ABORT!!! UNHANDLED EXCEPTION!! HELP \n" + e.toString());
                 }
                 for(double shame = 0; shame < 1; shame+=0.1 ){
-
+                    population.resetOffers(avg);
                     simulator.game = GameFactory.createPGG(game_name, honor, shame, Parameters.MODE, population);
 
                     for(int i = 0; i < Parameters.GENERATIONS; i++){

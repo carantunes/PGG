@@ -22,6 +22,6 @@ public class Parameters {
     /**
      * @see : com.pgg.v2.simulator.games.population.Constants;
      */
-    public static final int NET = 2;
+    public static final int NET = 1;
 
 }

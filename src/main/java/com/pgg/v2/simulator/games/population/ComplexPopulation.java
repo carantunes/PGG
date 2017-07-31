@@ -16,90 +16,6 @@ import java.util.stream.DoubleStream;
  */
 public class ComplexPopulation extends Population {
 
-    /** @var network index array
-     * int -> int[] */
-    public ArrayList<Integer>[] network;
-
-    @Override
-    public double getFitness(int index, Game game) {
-        double[] profits = new double[Parameters.N_GAMES];
-        //get subject neighbours
-        ArrayList<Integer> neighbours = network[index];
-
-        //for all neighb play with their neigh
-        for(int i = 0; i < neighbours.size(); i++){
-            Subject[] group = getSubjectNeighbors(neighbours.get(i));
-            profits[i] = game.playGame(getSubject(index), group);
-        }
-
-        return DoubleStream.of(profits).sum() / neighbours.size();
-    }
-
-    public int countSubjectLinks(int index){
-
-        ArrayList links = network[index];
-        return (links != null) ? links.size() : 0;
-    }
-
-    public int countTotalLinks(){
-        int total = 0;
-        for(ArrayList<Integer> links : network)
-        {
-            if(links != null)
-                total += links.size();
-        }
-        return total;
-    }
-
-    public void dumpNetworkCSV(){
-        BufferedWriter writer;
-        double offerAverage = getOfferAverage();
-        String filename = "net_" + offerAverage +".csv";
-
-        try {
-            writer = new BufferedWriter(new FileWriter("stats/" + filename));
-
-            for (int node = 0; node < network.length ; node++) {
-
-                ArrayList<Integer> edges = network[node];
-                String edges_string = Integer.toString(node);
-
-                for(int edge = 0; edge < edges.size(); edge++ ){
-                    edges_string += "," + Integer.toString(edges.get(edge));
-                }
-
-                writer.write(edges_string);
-                writer.newLine();
-
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        filename = "net_stats" + offerAverage +".txt";
-        try {
-            writer = new BufferedWriter(new FileWriter("stats/" + filename));
-
-            double degreeAverage = getDegreeAverage();
-            double minimumDegree = getMinimumDegree();
-
-            writer.write("Offer Average: " + offerAverage);
-            writer.newLine();
-            writer.write("Degree Average: " + degreeAverage);
-            writer.newLine();
-            writer.write("Min degree: " + minimumDegree);
-            writer.newLine();
-            writer.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public ComplexPopulation() {
         //create population
         Random rnd = new Random();
@@ -160,47 +76,37 @@ public class ComplexPopulation extends Population {
                 }
             }
         }
-
-
-
-        dumpNetworkCSV();
-    }
-
-
-
-    public double getMinimumDegree(){
-        double max_degree =  Parameters.POPULATION_SIZE * Parameters.POPULATION_SIZE;
-        double min_degree = max_degree;
-        for (ArrayList links : network) {
-            if(links.size() < min_degree)
-                min_degree =  links.size();
-        }
-
-        return min_degree;
-    }
-
-    public double getDegreeAverage(){
-        double degree_sum = 0;
-        for (ArrayList links : network) {
-            degree_sum += links.size() ;
-        }
-
-        return degree_sum/ Parameters.POPULATION_SIZE;
     }
 
     @Override
-    public double getOfferAverage(){
-        double offer_sum = 0;
-        for (Subject subject : population) {
-            offer_sum += subject.getOffer();
+    public double getFitness(int index, Game game) {
+        double[] profits = new double[Parameters.N_GAMES];
+        //get subject neighbours
+        ArrayList<Integer> neighbours = network[index];
+
+        //for all neighb play with their neigh
+        for(int i = 0; i < neighbours.size(); i++){
+            Subject[] group = getSubjectNeighbors(neighbours.get(i));
+            profits[i] = game.playGame(getSubject(index), group);
         }
 
-        return offer_sum/ Parameters.POPULATION_SIZE;
+        return DoubleStream.of(profits).sum() / neighbours.size();
     }
 
-    @Override
-    public Subject getSubject(int index){
-        return population[index];
+    public int countSubjectLinks(int index){
+
+        ArrayList links = network[index];
+        return (links != null) ? links.size() : 0;
+    }
+
+    public int countTotalLinks(){
+        int total = 0;
+        for(ArrayList<Integer> links : network)
+        {
+            if(links != null)
+                total += links.size();
+        }
+        return total;
     }
 
 

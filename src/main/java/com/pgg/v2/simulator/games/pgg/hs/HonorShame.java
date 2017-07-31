@@ -27,24 +27,7 @@ public class HonorShame extends PGG {
         this.mode = mode;
     }
 
-    public HonorShame(Population population,
-                      Mode mode) {
-        super(population);
-        this.honorFactor = honorFactor;
-        this.shameFactor = shameFactor;
-        this.mode = mode;
-    }
-
     //private methods
-
-
-    public void setHonorFactor(double honorFactor) {
-        this.honorFactor = honorFactor;
-    }
-
-    public void setShameFactor(double shameFactor) {
-        this.shameFactor = shameFactor;
-    }
 
     @Override
     public double playGame(Subject subject, Subject[] neighbours_group)
