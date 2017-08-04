@@ -93,6 +93,10 @@ public class HSSimulator {
     public static void main(String[] args) throws InvalidGameException {
         HSSimulator simulator = new HSSimulator();
         String game_name = args[0];
+        if(args.length > 1){
+            String net = args[1];
+            Parameters.NET = Integer.valueOf(net);
+        }
         DecimalFormat df = new DecimalFormat("#.##");
 
         if (!isClass(HonorShame.class.getPackage().getName() + "." + game_name) && !game_name.equals("PGG")) {
@@ -102,10 +106,12 @@ public class HSSimulator {
         Population population = PopulationFactory.createPopulation(Parameters.NET);
         population.dumpNetworkCSV();
 
-        for(Double avg = 0.5; avg <= 1.0; avg += 0.1){
+        for(Double avg = 0.0; avg <= 1.0; avg += 0.1){
 
             simulator.openWriter( game_name
                     + "_MATRIX_"
+                    + "_NET-"
+                    + Parameters.NET
                     + "_stats_F-"
                     + Parameters.FACTOR
                     + "_B-"

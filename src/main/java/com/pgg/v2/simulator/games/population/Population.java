@@ -47,7 +47,7 @@ public abstract class Population {
     public void dumpNetworkCSV(){
         BufferedWriter writer;
         double offerAverage = getOfferAverage();
-        String filename =  "net-" + this.getClass().getName() + "_OfferAVG-" + offerAverage + "_AVG-"+ avg + ".csv";
+        String filename =  "net-" + this.getClass().getSimpleName() + "_OfferAVG-" + offerAverage + "_AVG-"+ avg + ".csv";
 
         try {
             writer = new BufferedWriter(new FileWriter("stats/" + filename));
@@ -71,7 +71,7 @@ public abstract class Population {
         }
 
 
-        filename =  "netStats-" + this.getClass().getName() + "_OfferAVG-" + offerAverage + "_AVG-"+ avg + ".csv";
+        filename =  "netStats-" + this.getClass().getSimpleName() + "_OfferAVG-" + offerAverage + "_AVG-"+ avg + ".csv";
         try {
             writer = new BufferedWriter(new FileWriter("stats/" + filename));
 
