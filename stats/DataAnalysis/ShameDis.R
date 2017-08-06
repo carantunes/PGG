@@ -1,0 +1,27 @@
+values1 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.0_S-.txt", header = FALSE)
+values2 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.2_S-.txt", header = FALSE)
+values3 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.3_S-.txt", header = FALSE)
+values4 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.4_S-.txt", header = FALSE)
+values5 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.5_S-.txt", header = FALSE)
+values6 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.6_S-.txt", header = FALSE)
+values7 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.7_S-.txt", header = FALSE)
+values8 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.8_S-.txt", header = FALSE)
+values9 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-.9_S-.txt", header = FALSE)
+values10 <- read.csv("stats/Shame/PGGShame_stats_F-3.0_B-1.0_H-1.0_S-.txt", header = FALSE)
+len <- length(values1[[1]])
+plot(1:len, values1[[1]], ylim = c(0,1.0), type = "l", main = "Shame Impact on Cooperation", xlab = "Generations", ylab = "AVG Offer", col="darkgoldenrod4")
+lines(1:len, values2[[1]], col = "green")
+lines(1:len, values3[[1]], col = "purple")
+lines(1:len, values4[[1]], col = "red")
+lines(1:len, values5[[1]], col = "blue")
+lines(1:len, values6[[1]], col = "black")
+lines(1:len, values7[[1]], col = "orange")
+lines(1:len, values8[[1]], col = "deeppink")
+lines(1:len, values9[[1]], col = "olivedrab1")
+lines(1:len, values10[[1]], col = "lightsalmon")
+
+par(mar=c(5.1, 5, 5, 8.1), xpd=TRUE)
+legend("topright", inset=c(-0.31,0),
+       legend=c("Shame = 0.0","Shame = 0.2","Shame = 0.3","Shame = 0.4","Shame = 0.5","Shame = 0.6","Shame = 0.7","Shame = 0.8","Shame = 0.9", "Shame = 1.0"),
+       lty = c(1),
+       col=c("darkgoldenrod4","green","purple","red","blue","black","orange","deeppink","olivedrab1","lightsalmon") )

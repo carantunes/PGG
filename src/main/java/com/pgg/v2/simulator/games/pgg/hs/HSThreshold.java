@@ -27,13 +27,18 @@ public class HSThreshold extends HonorShame{
      */
     @Override
     protected double getProfit(Subject[] group) {
+        hit_threshold = false;
         double offer_sum = 0;
         //sum total of offers
         for (Subject subject : group) {
             offer_sum += subject.getOffer();
         }
+
+        double max_offer = group.length;
+
+
         //if offers < threshold returns 0 else returns a players' cut of the pot
-        if(offer_sum < Parameters.THRESHOLD)
+        if(offer_sum < (Parameters.THRESHOLD * max_offer))
             return 0;
 
         hit_threshold = true;

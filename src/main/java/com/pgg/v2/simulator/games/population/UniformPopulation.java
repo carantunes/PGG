@@ -19,13 +19,11 @@ public class UniformPopulation extends Population
 
         //create population
         Random rnd = new Random();
-        neighbors =  new ArrayList<Integer>();
         population = new Subject[Parameters.POPULATION_SIZE];
 
         for (int i = 0; i < Parameters.POPULATION_SIZE; i++) {
             // double offer = rnd.nextDouble();
             population[i] = new Subject(i);
-            neighbors.add(i);
         }
     }
 

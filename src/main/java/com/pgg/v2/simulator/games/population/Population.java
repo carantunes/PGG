@@ -45,6 +45,8 @@ public abstract class Population {
     }
 
     public void dumpNetworkCSV(){
+        if(Parameters.NET == 0)
+            return;
         BufferedWriter writer;
         double offerAverage = getOfferAverage();
         String filename =  "net-" + this.getClass().getSimpleName() + "_OfferAVG-" + offerAverage + "_AVG-"+ avg + ".csv";
